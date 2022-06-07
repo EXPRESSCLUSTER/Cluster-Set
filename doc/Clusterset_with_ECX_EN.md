@@ -4,7 +4,7 @@
 - Features introduced from Windows Server 2019. See below for an overview.
   - https://docs.microsoft.com/ja-jp/azure-stack/hci/deploy/cluster-set
 
-## Benefit of "cluster set" 
+## Benefit of Cluster set
 1. Scalability
 2. LoadBalancing
 3. Perform FO with VM backup restore (method ?,I don't understand much. I need to think about benefit)
