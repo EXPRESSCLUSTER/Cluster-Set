@@ -23,7 +23,7 @@
 ### Limitations
 - (First of all,)Live Migration is excluded.
 - Set the data replication method aside.
-  --First, focus on the node management method.
+  -　First, focus on the node management method.
 
 
 ### Configuration plan
