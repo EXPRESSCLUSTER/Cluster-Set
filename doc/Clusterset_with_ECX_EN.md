@@ -93,6 +93,3 @@
 ### 2nd step: Handing over data between workers
 - Since mirror disk resources and hybrid disk resources cannot be used, it is necessary to consider ways to take over the data by other means.
 - If you want to failover the VM, can you take advantage of the backup and restore of the VM
-
-### 3rd step: Master clustering
-- How to make the script that controls the Cluster Set that the Master should execute redundant. What to do with Split-Brain?
