@@ -23,8 +23,8 @@ The goal is to realize the value of WSFC's Cluster-Set with ECX.
 
 - The values of Cluster-Set
 	- Scalability
-	- LB
-	- ?
-	- ?
+	- Load Balancing
+	- Can be managed fully by CLI
+	- Fault domains and Availability set
 - Implement LB on Cluster-Set
 - Implement the function for deletion of (script, MD, SD) resource from `clp.conf`. `clpcfset` does not have the function.
