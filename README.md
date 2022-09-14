@@ -36,7 +36,7 @@ The goal is to realize the value of WSFC's Cluster-Set with ECX.
 - Two WSFC clusters of 2 nodes each were created    
         \*Note that clusters can have more nodes and be in the same domain or on different subnets
 - Hyper-V Replica Broker was added as a role to each WSFC cluster to facilitate cross-cluster VM migration
-- Hyper-V Replica server was configured on each cluster from the Hyper-V Replica Broker role in Failover Cluster Manager. 
+- Hyper-V Replica server was configured on each cluster from the Hyper-V Replica Broker role in Failover Cluster Manager.     
        - By configuring this on both clusters, the replication direction can be reversed when a VM is moved from one cluster to another
        - A specific server in a cluster cannot be selected, so the Hyper-V Replica Broker fills in to represent all of the servers in the cluster. 
 - Hyper-V Replication from WSFC cluster1 to WSFC cluster2 was enabled from the VM in Failover Cluster Manager
