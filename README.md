@@ -3,9 +3,9 @@ The goal is to realize the value of WSFC's Cluster-Set with ECX.
 
 ## Implementing Cluster-Set by EC
 
-### Gary's premice 2022.08.02
+### Gary's premise 2022.08.02
 
-- Ignore network address difference across migraiton.
+- Ignore network address difference across migration.
 - LiveMigration still needs WSFC.
 - Firewall going to be configured
 - Hyper-V Replica
