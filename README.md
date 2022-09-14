@@ -44,6 +44,6 @@ The goal is to realize the value of WSFC's Cluster-Set with ECX.
 	- Certificate-based authentication (https) can be used for clusters in the same domain or in different subnets.
 
 **VM Migration**
-- VMs can be moved across clusters (this was confirmed in testing)
+- VMs can be moved across clusters using the Planned Failover feature of Replication (this was confirmed in testing)
 	- VMs must be stopped first since live migration is not possible.
-- VMs can be live-migrated to another node within the same cluster
+- VMs can be live-migrated to another node within the same cluster from Failover Cluster Manager (also confirmed in testing)
