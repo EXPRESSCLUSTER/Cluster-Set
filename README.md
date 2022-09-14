@@ -32,7 +32,7 @@ The goal is to realize the value of WSFC's Cluster-Set with ECX.
 ### WSFC with Hyper-V Replica notes 2022.09.14
 *Relocation of a VM from one server rack to another is possible*    
 
- **Configuration**
+ **Configuration (without Cluster-Set)**
 - Two WSFC clusters of 2 nodes each were created    
 	\*Note that clusters can have more nodes and be in the same domain or on different subnets.
 - Hyper-V Replica Broker was added as a role to each WSFC cluster to facilitate cross-cluster VM migration
