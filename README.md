@@ -47,3 +47,15 @@ The goal is to realize the value of WSFC's Cluster-Set with ECX.
 - VMs can be moved across clusters using the Planned Failover feature of Replication (this was confirmed in testing)
 	- VMs must be stopped first since live migration is not possible.
 - VMs can be live-migrated to another node within the same cluster from Failover Cluster Manager (also confirmed in testing)
+
+### ECX 2 cluster note 2022.09.21 
+*Reproduce the same configuration as Cluster-Set only with ECX*
+
+**Testing Configuration**
+- Two clusters of 2 nodes each were created.
+- They connect to the same iSCSI and check the contents of the disk.
+- Set start script and end script to control VM.
+- I stop the disk resource from one of the cluster, to prevent seeing on the same disc at the same time.
+
+**VM Migration**
+- VMs can be moved across clusters using the script resource and Stopping the disk resource by manual.
