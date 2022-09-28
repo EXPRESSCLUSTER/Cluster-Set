@@ -48,7 +48,7 @@ The goal is to realize the value of WSFC's Cluster-Set with ECX.
 	- VMs must be stopped first since live migration is not possible.
 - VMs can be live-migrated to another node within the same cluster from Failover Cluster Manager (also confirmed in testing)
 
-### ECX 2 cluster note 2022.09.21 
+### ECX 2 cluster note 2022.09.28 
 *Reproduce the same configuration as Cluster-Set only with ECX*
 
 **Testing Configuration**
