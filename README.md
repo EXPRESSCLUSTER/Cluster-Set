@@ -56,6 +56,10 @@ The goal is to realize the value of WSFC's Cluster-Set with ECX.
 - They connect to the same iSCSI and check the contents of the disk.
 - Set start script and end script to control VM.
 - I stop the disk resource from one of the cluster, to prevent seeing on the same disc at the same time.
+- I use RestfulAPI in my custom monitor resource script to check if other clusters are running 
+- It is difficult to FO to other cluster with only script resource.
+	- There is a risk that the script will not run when the server turned off at the same time by using the script resource.
+	- It is not possible to determine when to move manually and when not to move during maintenance etc.
 
 **VM Migration**
 - VMs can be moved across clusters using the script resource and Stopping the disk resource by manual.
