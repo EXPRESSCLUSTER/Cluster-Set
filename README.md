@@ -63,3 +63,30 @@ The goal is to realize the value of WSFC's Cluster-Set with ECX.
 
 **VM Migration**
 - VMs can be moved across clusters using the script resource and Stopping the disk resource by manual.
+
+### ECX 2 cluster script outline
+- This script can be started on any server
+- The information of cluster1, cluster2, server1, server2, server3, server4 as variables
+- specify as an array
+- subsequent processing
+- Get the status of the cluster to which the server belongs, change the URL later
+
+```
+$result = curl.exe -u root:cluster-0 http://127.0.0.1:29009/api/v1/groups/failover1 --noproxy 127.0.0.1 | ConvertFrom-Json
+if ($result.groups.status -eq "Online")
+{
+    Write-Output "Failover group is running on my cluster."
+    exit 0
+}
+```
+
+- Get group status of other cluster
+- Insert the process to get the status of the group from other clusters here
+- If a communication error occurs, go to another server in another cluster to get the status
+```
+if ($result.groups.status -eq "Online")
+{
+    Write-Output "Failover group is running on the other cluster."
+    exit 0
+```
+ Start group with RESTful API or clprexec
