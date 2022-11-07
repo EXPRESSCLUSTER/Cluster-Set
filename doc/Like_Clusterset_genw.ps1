@@ -1,8 +1,13 @@
+# clusters
+# - Add cluster servers.
+# - The following sample has 2 clusters.
+# - If you want to add one more cluster that has server5 and
+#   server6, write as below.
 
-$server1 = @("ws2019-232", "192.168.1.232", "29009", "Administrator", "cluster-0")
-$server2 = @("ws2019-233", "192.168.1.233", "29009", "Administrator", "cluster-0")
-$server3 = @("ws2019-234", "192.168.1.234", "29009", "Administrator", "cluster-0")
-$server4 = @("ws2019-235", "192.168.1.235", "29009", "Administrator", "cluster-0")
+$server1 = @("ws2019-232", "192.168.1.1", "29009", "Administrator", "password")
+$server2 = @("ws2019-233", "192.168.1.2", "29009", "Administrator", "password")
+$server3 = @("ws2019-234", "192.168.1.3", "29009", "Administrator", "password")
+$server4 = @("ws2019-235", "192.168.1.4", "29009", "Administrator", "password")
 $cluster1 = @($server1, $server2)
 $cluster2 = @($server3, $server4)
 
@@ -12,6 +17,7 @@ $groups = @("failover", "failover")
 
 $hostname = hostname
 
+# Find my server in the clusters matrix.
 $clusterid = -1
 Write-Debug $clusters.Length
 for ($i = 0; $i -lt $clusters.Length; $i++)
@@ -97,7 +103,7 @@ for ($i = 0; $i -lt $groups.Length; $i++)
 }
 
 
-
+# Get the group status from API server on the other clusters.
 if ($running -eq 0)
     {
         for ($j = 0; $j -lt $clusters.Length; $j++)
@@ -151,7 +157,7 @@ if ($running -eq 0)
         }
      }
 
-
+# Recover the group
 if ($running -eq 0)
         {
             $user = $clusters[$clusterid][$serverid][3]
