@@ -1,11 +1,11 @@
 ﻿$clusters = @(
     @(
-        @("ws2019-232", "192.168.1.232", "29009", "Administrator", "cluster-0"),
-        @("ws2019-233", "192.168.1.233", "29009", "Administrator", "cluster-0")
+        @("server1", "192.168.1.1", "29009", "user", "password"),
+        @("server2", "192.168.1.2", "29009", "user", "password")
     ),
     @(
-        @("ws2019-234", "192.168.1.234", "29009", "Administrator", "cluster-0"),
-        @("ws2019-235", "192.168.1.235", "29009", "Administrator", "cluster-0")
+        @("server3", "192.168.1.3", "29009", "user", "password"),
+        @("server4", "192.168.1.4", "29009", "user", "password")
     )
 )
 
