@@ -1,5 +1,5 @@
-﻿#cluster infomation
-Set the following parameters
+#cluster infomation
+#Set the following parameters
 
 $clusters = @(
     @(
