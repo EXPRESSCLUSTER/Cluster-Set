@@ -128,24 +128,24 @@
 - If FO group cannot be started on server 1, try to start on server 2.
 
 ### Script description
-- l1-l17  
+- l1-l26  
   - Set server and user information.
-- 8-l48  
+- l27-l58  
   - Check if the server that started the script belongs to the cluster set
-- l49-l103  
+- l59-l111  
   - Get FO group status of own cluster
   - If any one is online, exit this program.
   - If both are offline, proceed to next step.
-- l104~157  
+- l112~165  
   - Get FO status of other cluster
   - If any one is online, end
   - If both are offline, proceed to next step
-- l158-l195  
+- l166-l201  
   - Get custom monitor resource status for each of the 4 servers.
-- l158-l196  
+- l202-l217  
   - Processing when custom monitors are running on four servers
   - Start FO group on server 1
-- l197-l256  
+- l218-l259  
   - Processing when the custom monitor is not running on any one of the servers
   - Attempt to start FO group in order from server 1 according to the priority
   - If there is a server that can be started, exit there
