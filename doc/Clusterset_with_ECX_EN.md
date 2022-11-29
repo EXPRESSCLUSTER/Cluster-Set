@@ -93,3 +93,60 @@
 ### 2nd step: Handing over data between workers
 - Since mirror disk resources and hybrid disk resources cannot be used, it is necessary to consider ways to take over the data by other means.
 - If you want to failover the VM, can you take advantage of the backup and restore of the VM
+
+## Script Outline
+```
+
+                          +-----------------+
+                          | Worker Cluster1 |
+                          | +-----------+   |
+                     +------| Worker1-1 |   |
+                     |    | +---+-------+   |
+                     |    |     |           |
+                     |    | +-----------+   |
+                     +------| Worker1-2 |   |
+                     |    | +---+-------+   |
+                     |    +-----------------+
++------------------+ |
+| Active Directory |-+    
++------------------+ |                     
+                     |    +-----------------+
+                     |    | Worker Cluster2 |
+                     |    | +-----------+   |
+                     +------| Worker2-1 |   |
+                     |    | +---+-------+   |
+                     |    |     |           |
+                     |    | +-----------+   |
+                     +------| Worker2-2 |   |
+                          | +---+-------+   |
+                          +-----------------+
+```
+###Feature
+- A cluster set consisting of 2 clusters and 2 nodes
+- Make sure that the FO group is always running on one of the four nodes.
+- Priority is server 1 , server 2, 3, 4
+- If FO group cannot be started on server 1, try to start on server 2.
+
+###Script description
+- l1-l17
+ -- Set server and user information.
+- l18-l48
+ -- Check if the server that started the script belongs to the cluster set
+- l49-l103
+ -- Get FO group status of own cluster
+ -- If any one is online, exit this program.
+ -- If both are offline, proceed to next step.
+- l104~157
+ -- Get FO status of other cluster
+ -- If any one is online, end
+ -- If both are offline, proceed to next step
+- l158-l195
+ -- Get custom monitor resource status for each of the 4 servers.
+- l158-l196
+ -- Processing when custom monitors are running on four servers
+ -- Start FO group on server 1
+- l197-l256
+ -- Processing when the custom monitor is not running on any one of the servers
+ -- Attempt to start FO group in order from server 1 according to the priority
+ -- If there is a server that can be started, exit there
+ -- If the server cannot be started, start it on server 2 in order to the priority
