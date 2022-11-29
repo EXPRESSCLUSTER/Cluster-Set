@@ -167,10 +167,10 @@ for ($i = 0; $i -lt $groups.Length; $i++)
 if ($running -eq 0)
 {
     for ($j = 0; $j -lt $clusters.Length; $j++)
+    {
+        $server_sum = $server_sum + $clusters[$j].Length
+        for ($k = 0; $k -lt $clusters[$j].Length; $k++)
         {
-            $server_sum = $server_sum + $clusters[$j].Length
-            for ($k = 0; $k -lt $clusters[$j].Length; $k++)
-            {
             Write-Output $clusters[$j][$k][0]
             $user = $clusters[$j][$k][3]
             $pass = $clusters[$j][$k][4]
@@ -194,8 +194,8 @@ if ($running -eq 0)
             	 Write-Output "$monitor is not online on $hostname."
                  Write-Debug $genw_offline_counts
             }
-            }
          }
+     }
 }
 
        
