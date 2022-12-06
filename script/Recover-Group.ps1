@@ -16,13 +16,13 @@ $groups = @("failover", "failover")
 
 $monitors = @("genw", "genw")
 
-$hostname = hostname
-
-$sleep_time = 15
+$sleep_time = 20
 
 $genw_offline_counts = 0
 
 $failover_start = 0
+
+$hostname = hostname
 
 # Find my server in the clusters matrix.
 $clusterid = -1
@@ -110,57 +110,57 @@ for ($i = 0; $i -lt $groups.Length; $i++)
     }
 
  # Get the group status from API server on the other clusters.
-    if ($running -eq 0)
-    {
-    for ($j = 0; $j -lt $clusters.Length; $j++)
-    {
-        if ($j -eq $clusterid)
-        {
+if ($running -eq 0)
+{
+for ($j = 0; $j -lt $clusters.Length; $j++)
+{
+   if ($j -eq $clusterid)
+   {
                 # Do nothing
-        }
-        else
-        {
-        for ($k = 0; $k -lt $clusters[$k].Length; $k++)
-        {
-            Write-Output $clusters[$j][$k][0]
-            $user = $clusters[$j][$k][3]
-            $pass = $clusters[$j][$k][4]
-            $uri = "http://" + $clusters[$j][$k][1] + ":" + $clusters[$j][$k][2] + "/api/v1/groups/" + $groups[$k]
-            Write-Output $user
-            Write-Debug $pass
-            Write-Output $uri
-            $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $user,$pass)))
-            $ret = Invoke-RestMethod -Method Get -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Uri $uri
-            Write-Output $ret
-            Write-Output $ret.groups.status
-            if ($ret.groups.status -eq "Online")
-            {
+   }
+   else
+   {
+       for ($k = 0; $k -lt $clusters[$k].Length; $k++)
+       {
+           Write-Output $clusters[$j][$k][0]
+           $user = $clusters[$j][$k][3]
+           $pass = $clusters[$j][$k][4]
+           $uri = "http://" + $clusters[$j][$k][1] + ":" + $clusters[$j][$k][2] + "/api/v1/groups/" + $groups[$k]
+           Write-Output $user
+           Write-Debug $pass
+           Write-Output $uri
+           $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $user,$pass)))
+           $ret = Invoke-RestMethod -Method Get -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Uri $uri
+           Write-Output $ret
+           Write-Output $ret.groups.status
+           if ($ret.groups.status -eq "Online")
+           {
+               $group = $groups[$j]
+               $current = $ret.groups.current
+               Write-Output "$group is running on $current."
+               $running = 1
+               break;
+           }
+           if ($ret.groups.status -eq "Online Pending" -or $ret.groups.status -eq "Offline Pending")
+           {
                 $group = $groups[$j]
                 $current = $ret.groups.current
-                Write-Output "$group is running on $current."
-                $running = 1
-                break;
+                Write-Output "$group is Pending on $current."
+                $msg = "$group is pending on " + $current + "."
+                clplogcmd -m "$msg" -l WAR
             }
-            if ($ret.groups.status -eq "Online Pending" -or $ret.groups.status -eq "Offline Pending")
-            {
+           if ($ret.groups.status -eq "Online Failure" -or $ret.groups.status -eq "Offline Failure")
+           {
                  $group = $groups[$j]
                  $current = $ret.groups.current
-                 Write-Output "$group is Pending on $current."
-                 $msg = "$group is pending on " + $current + "."
+                 Write-Output "$group is Failure on $current."
+                 $msg = "$groups is failure on " + $current + "."
                  clplogcmd -m "$msg" -l WAR
-             }
-            if ($ret.groups.status -eq "Online Failure" -or $ret.groups.status -eq "Offline Failure")
-            {
-                  $group = $groups[$j]
-                  $current = $ret.groups.current
-                  Write-Output "$group is Failure on $current."
-                  $msg = "$groups is failure on " + $current + "."
-                  clplogcmd -m "$msg" -l WAR
-             }
-          }
-          }        
+            }
+        }
+    }        
     }
-    }
+}
 }
 
 # Get the genw status on all server
@@ -171,31 +171,31 @@ if ($running -eq 0)
         $server_sum = $server_sum + $clusters[$j].Length
         for ($k = 0; $k -lt $clusters[$j].Length; $k++)
         {
-            Write-Output $clusters[$j][$k][0]
-            $user = $clusters[$j][$k][3]
-            $pass = $clusters[$j][$k][4]
-            $genw = $monitors[$j]
-            $uri = "http://" + $clusters[$j][$k][1] + ":" + $clusters[$j][$k][2]+ "/api/v1/monitors/" + $genw
-            Write-Output $user
-            Write-Debug $pass
-            Write-Output $uri
-            $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $user,$pass)))
-            $ret = Invoke-RestMethod -Method Get -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Uri $uri
-            Write-Output $ret
-            Write-Output $ret.result.status
-            $hostname = $clusters[$j][$k][0]
-            if ($ret.result.status -eq "Normal" )
-            {
-               	$genw_offline_counts=$genw_offline_counts+1
-            }
-            else
-            {
-            	 $monitor = $monitors[$j]
-            	 Write-Output "$monitor is not online on $hostname."
-                 Write-Debug $genw_offline_counts
-            }
+        Write-Output $clusters[$j][$k][0]
+        $user = $clusters[$j][$k][3]
+        $pass = $clusters[$j][$k][4]
+        $genw = $monitors[$j]
+        $uri = "http://" + $clusters[$j][$k][1] + ":" + $clusters[$j][$k][2]+ "/api/v1/monitors/" + $genw
+        Write-Output $user
+        Write-Debug $pass
+        Write-Output $uri
+        $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $user,$pass)))
+        $ret = Invoke-RestMethod -Method Get -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Uri $uri
+        Write-Output $ret
+        Write-Output $ret.result.status
+        $hostname = $clusters[$j][$k][0]
+        if ($ret.result.status -eq "Normal" )
+        {
+           $genw_offline_counts=$genw_offline_counts+1
+        }
+        else
+        {
+            $monitor = $monitors[$j]
+            Write-Output "$monitor is not online on $hostname."
+            Write-Output $genw_offline_counts
          }
-     }
+         }
+      }
 }
 
        
@@ -238,7 +238,7 @@ else
         $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $user,$pass)))
         $ret = Invoke-RestMethod -Method Post -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Uri $uri -Body $body
         Write-Output $ret.result.code
-        Start-Sleep 15
+        Start-Sleep $sleep_time
         $uri = "http://" + $clusters[$j][$k][1]+ ":" + $clusters[$j][$k][2] + "/api/v1/groups/" + $groups[$i]
         $ret = Invoke-RestMethod -Method Get -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Uri $uri
         Write-Output $ret.groups.status
