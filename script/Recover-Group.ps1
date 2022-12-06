@@ -12,9 +12,9 @@ $clusters = @(
     )
 )
 
-$groups = @("failover", "failover")
+$groups = @("failover1", "failover2")
 
-$monitors = @("genw", "genw")
+$monitors = @("genw"1, "genw2")
 
 $sleep_time = 20
 
