@@ -12,7 +12,7 @@ The goal is to realize the value of WSFC's Cluster-Set with ECX.
 	- Router VM will not be required
 - 2 node clusters
 - MD resource will not be used
-- Scripts will manage intra-cluster VM moves and replication changes
+- Scripts will manage intra-cluster VM moves and replication changes between clusters
 - Manually move the VM Cross-Cluster using Hyper-V Replica's "Planned Failover" option: 
 	- Stop the VM on a node in cluster-A
 	- Select option to reverse the direction of replication
