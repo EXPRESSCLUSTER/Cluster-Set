@@ -51,7 +51,7 @@ The goal is to realize the value of WSFC's Cluster-Set with ECX.
 
 ## Implementing Cluster-Set by EC (application)
 
-### ECX 2-cluster one shared disk
+### 1. ECX 2-cluster one shared disk
 
 ### ECX 2 cluster note 2022.09.28 
 *Reproduce the same configuration as Cluster-Set only with ECX*
@@ -96,7 +96,9 @@ if ($result.groups.status -eq "Online")
 ```
  Start group with RESTful API or clprexec
 
-### ECX 2 cluster two shared disks with Hyper-V Replication
+### 2. ECX 2 cluster two shared disks with Hyper-V Replication
+
+## Other
 
 ### Move-VM
 
