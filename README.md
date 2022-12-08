@@ -97,3 +97,12 @@ if ($result.groups.status -eq "Online")
  Start group with RESTful API or clprexec
 
 ### ECX 2 cluster two shared disks with Hyper-V Replication
+
+### Move-VM
+
+If you only want to temporarily move a VM to another cluster (while performing maintenance), and do not care about HA or DR, this PowerShell command will work. The command can Live-Migrate a VM from a node in Cluster-A to a node in Cluster-B.
+
+```
+     Move-VM -Name <vm name> -DestinationHost <active node in other cluster> -IncludeStorage -DestinationStoragePath <path to copy files to>
+```
+
