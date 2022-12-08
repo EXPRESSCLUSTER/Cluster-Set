@@ -1,7 +1,7 @@
 # Cluster-Set
 The goal is to realize the value of WSFC's Cluster-Set with ECX.
 
-## Implementing Cluster-Set by EC
+## Implementing Cluster-Set by EC (planning and investigation)
 
 ### Gary's premise 2022.08.02
 
@@ -12,10 +12,11 @@ The goal is to realize the value of WSFC's Cluster-Set with ECX.
 	- Router VM will not be required
 - 2 node clusters
 - MD resource will not be used
-- Manually move the VM: a script would be run the commands. 
+- Scripts will manage intra-cluster VM moves and replication changes
+- Manually move the VM Cross-Cluster using Hyper-V Replica's "Planned Failover" option: 
 	- Stop the VM on a node in cluster-A
-	- Start the VM on a node in cluster-B
-	- Reverse the direction
+	- Select option to reverse the direction of replication
+	- Select option to start the VM on a node in cluster-B
 - LM requirement : optional or mandatory
 - WSFC requirement : optional or mandatory
 
@@ -47,6 +48,10 @@ The goal is to realize the value of WSFC's Cluster-Set with ECX.
 - VMs can be moved across clusters using the Planned Failover feature of Replication (this was confirmed in testing)
 	- VMs must be stopped first since live migration is not possible.
 - VMs can be live-migrated to another node within the same cluster from Failover Cluster Manager (also confirmed in testing)
+
+## Implementing Cluster-Set by EC (application)
+
+### ECX 2-cluster one shared disk
 
 ### ECX 2 cluster note 2022.09.28 
 *Reproduce the same configuration as Cluster-Set only with ECX*
@@ -90,3 +95,5 @@ if ($result.groups.status -eq "Online")
     exit 0
 ```
  Start group with RESTful API or clprexec
+
+### ECX 2 cluster two shared disks with Hyper-V Replication
