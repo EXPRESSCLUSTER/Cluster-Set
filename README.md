@@ -98,6 +98,8 @@ if ($result.groups.status -eq "Online")
 
 ### 2. ECX 2 cluster two shared disks with Hyper-V Replication
 
+*Update Coming Soon*
+
 ## Other
 
 ### Move-VM
