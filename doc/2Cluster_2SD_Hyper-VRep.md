@@ -11,9 +11,7 @@ This document gives more details about this particular solution
   -	Start replication.
   -	Start VM on Hyper-V Replication Primary server*    
     *This is the only step not done on the Replica server.    
-- **Stop.bat** determines what kind of stop event occurred. If the script resource or group was stopped, no action is taken. If it is a ‘group move’ or failover, VM replication is removed from the Hyper-V Primary and Replica servers.
-- **Start.bat** calls a startup PowerShell script which will do the following on the Primary server:
-  
+- **Stop.bat** determines what kind of stop event occurred. If the script resource or group was stopped, no action is taken. If it is a ‘group move’ or failover, a PowerShell script is called and VM replication is removed from the Hyper-V Primary and Replica servers. The VM is also stopped.
     
 Scripts start or stop on the active server in either cluster.
 ## Setup
