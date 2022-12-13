@@ -42,7 +42,7 @@ Scripts start or stop on the active server in either cluster.
 Cluster-1 and Cluster-2 active node 
 - Stop group
 - Start group
-- Move group to another node in cluster
+- Move group to other node within same cluster
 - Move group back
 ## Problematic scenarios
 - The active node in both clusters fails over at the same time
