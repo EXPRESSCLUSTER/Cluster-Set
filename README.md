@@ -113,7 +113,7 @@ This Cluster Set type solution uses Hyper-V replication between active nodes on 
 - FIP resource is used.
 - Script resource is used.
 
-Link to more [specific details](docs\).
+Link to more [specific details](doc/2Cluster_2SD_Hyper-VRep.md).
 
 ## Other
 
