@@ -39,16 +39,18 @@ Scripts start or stop on the active server in either cluster.
 15.	After replication has completed, add the failover scripts in ECX Manager
 16.	Test
 ## Testing
-•	Cluster-1 and Cluster-2 active node 
-Stop group
-Start group
-Move group to another node in cluster
-Move group back
-Problematic scenarios
-•	The active node in both clusters fails over at the same time
+Cluster-1 and Cluster-2 active node 
+- Stop group
+- Start group
+- Move group to another node in cluster
+- Move group back
+## Problematic scenarios
+- The active node in both clusters fails over at the same time
 Concern: Depending on the timing, the scripts to modify replication might interfere with each other, leading to failure re-enabling replication.
-Potential Enhancements
-•	Hyper-V replication monitoring
 
-Other Notes
-•	Stopping the script resource and starting it again should fix replication in the event that the scripts failed or did not complete after a group move or failover.
+## Potential Enhancements
+- Hyper-V replication monitoring
+- Cross-cluster VM failover
+
+## Other Notes
+- Stopping the script resource and starting it again should fix replication in the event that the scripts failed or did not complete after a group move or failover.
