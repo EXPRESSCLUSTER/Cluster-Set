@@ -15,7 +15,7 @@ This document gives more details about this particular solution
     
 Scripts start or stop on the active server in either cluster. If the script fails to enable replication, stopping the script resource and starting it again may fix the problem.    
 
-Currently Cluster1 is assumed to host the Primary (source) server for replication and Cluster2 hosts the Replica server. Separate scripts exist for each role. Once a method is created to determine which cluster hosts the Primary replica role with 100% accuracy, either cluster will be able to run either script.
+Currently Cluster1 is assumed to host the Primary (source) server for replication and Cluster2 hosts the Replica server. Separate scripts exist for each role. Once a method is created to determine which cluster hosts the Primary replication role with 100% accuracy, either cluster will be able to run either script.
 ## Setup
 1.	Prepare four Windows 2019 servers (Standard or Datacenter) 
 2.	Join all servers to the same domain
