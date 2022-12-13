@@ -13,7 +13,7 @@ This document gives more details about this particular solution
     *This is the only step not done on the Replica server.    
 - **Stop.bat** determines what kind of stop event occurred. If the script resource or group was stopped, no action is taken. If it is a ‘group move’ or failover, a PowerShell script is called and VM replication is removed from the Hyper-V Primary and Replica servers. The VM is also stopped.
     
-Scripts start or stop on the active server in either cluster.
+Scripts start or stop on the active server in either cluster. If the script fails to enable replication, stopping the script resource and starting it again may fix the problem.
 ## Setup
 1.	Prepare four Windows 2019 servers (Standard or Datacenter) 
 2.	Join all servers to the same domain
