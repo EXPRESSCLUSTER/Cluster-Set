@@ -1,20 +1,21 @@
-# 
-Script Details
-•	Variables need to be set in SetEnvironment.bat.
-•	Start.bat determines if any action needs to be taken. If replication is progressing normally, no action is taken. If a ‘move group’ or failover just occurred, replication is changed to occur between the active servers on each cluster.
-•	Stop.bat determines what kind of stop event occurred. If the script resource or group was stopped, no action is taken. If it is a ‘group move’ or failover, VM replication is removed from the Hyper-V Primary and Replica servers.
-•	Start.bat calls a startup script which will do the following on the Primary server:
-o	Determine which cluster has the Hyper-V Primary server role and Replica server role.
-o	Remove replication from the Primary and Replica servers if still enabled.
-o	Register the VM in Hyper-V Manager if it has not been done on the server the script is run from.
-o	Enable the VM files on the Hyper-V Replica’s Replica server as the replica source.
-o	Enable VM replication from the Hyper-V Replica’s Primary server to the Replica server.
-o	Start replication.
-o	Start VM on Hyper-V Replication Primary server*
-
-*This is the only step not done on the Replica server.
-•	Scripts start or stop on the active server in either cluster.
-Setup
+# ECX 2 cluster two shared disks with Hyper-V Replication
+This document gives more details about this particular solution
+## Script Details
+- Variables need to be set in SetEnvironment.bat.
+- Start.bat determines if any action needs to be taken. If replication is progressing normally, no action is taken. If a ‘move group’ or failover just occurred, replication is changed to occur between the active servers on each cluster.
+- Stop.bat determines what kind of stop event occurred. If the script resource or group was stopped, no action is taken. If it is a ‘group move’ or failover, VM replication is removed from the Hyper-V Primary and Replica servers.
+- Start.bat calls a startup script which will do the following on the Primary server:
+    -	Determine which cluster has the Hyper-V Primary server role and Replica server role.
+    -	Remove replication from the Primary and Replica servers if still enabled.
+    -	Register the VM in Hyper-V Manager if it has not been done on the server the script is run from.
+    -	Enable the VM files on the Hyper-V Replica’s Replica server as the replica source.
+    -	Enable VM replication from the Hyper-V Replica’s Primary server to the Replica server.
+    -	Start replication.
+    -	Start VM on Hyper-V Replication Primary server*    
+    *This is the only step not done on the Replica server.    
+    
+Scripts start or stop on the active server in either cluster.
+## Setup
 1.	Prepare four Windows 2019 servers (Standard or Datacenter) 
 2.	Join all servers to the same domain
 3.	Install Hyper-V on all servers
