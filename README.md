@@ -105,7 +105,7 @@ This Cluster Set type solution uses Hyper-V replication between active nodes on 
 - A cross-cluster VM move is not automated. It has to be done manually.
 - Scripts automate intra-cluster failovers, changing Hyper-V Replica’s Primary or Replica servers as needed.
 - Kerberos authentication was used.
-- RESTful API used to query ExpressCluster configuration details of the other cluster. 
+- RESTful API used to query active server of the other cluster. 
 
 #### Testing Configuration
 - Two ECX clusters of two nodes each were created (Windows Server 2019).
