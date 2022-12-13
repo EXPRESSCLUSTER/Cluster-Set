@@ -1,10 +1,10 @@
 # ECX 2 cluster two shared disks with Hyper-V Replication
 This document gives more details about this particular solution
 ## Script Details
-- Variables need to be set in SetEnvironment.bat in order for the scripts to function properly.
-- Start.bat determines if any action needs to be taken. If replication is progressing normally, no action is taken. If a ‘move group’ or failover just occurred, replication is changed to occur between the active servers on each cluster.
-- Stop.bat determines what kind of stop event occurred. If the script resource or group was stopped, no action is taken. If it is a ‘group move’ or failover, VM replication is removed from the Hyper-V Primary and Replica servers.
-- Start.bat calls a startup script which will do the following on the Primary server:
+- Variables need to be set in **SetEnvironment.bat** in order for the scripts to function properly.
+- **Start.bat** determines if any action needs to be taken. If replication is progressing normally, no action is taken. If a ‘move group’ or failover just occurred, replication is changed to occur between the active servers on each cluster.
+- **Stop.bat** determines what kind of stop event occurred. If the script resource or group was stopped, no action is taken. If it is a ‘group move’ or failover, VM replication is removed from the Hyper-V Primary and Replica servers.
+- **Start.bat** calls a startup PowerShell script which will do the following on the Primary server:
     -	Determine which cluster has the Hyper-V Primary server role and Replica server role.
     -	Remove replication from the Primary and Replica servers if still enabled.
     -	Register the VM in Hyper-V Manager if it has not been done on the server the script is run from.
