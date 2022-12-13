@@ -11,7 +11,7 @@ Configuring VM in 2 cluster one shared disk
 
 ## Setup procedure
 ### Create ECX Server & AD server
- Domain User login
+ - ***
  
 ### Installing Hyper-V
 
@@ -47,7 +47,7 @@ Once OS installation is finished, do the following on each EC VM:
 - Configure IP addresses, gateway, DNS, proxy
 
 3.Connect iSCSI disk
-- 
+ - **** 
 
 4.Install ECX rpm & Register ECX license files
 
@@ -56,11 +56,10 @@ Once OS installation is finished, do the following on each EC VM:
 6.Once you complete the above steps on both EC servers, create an ECX cluster
 
 
-Floating IP address
+- Floating IP address
 	- Should belong to the network connecting to iSCSI_switch.
-Shared  disk
+- Shared  disk
 	- File System: NTFS
 	- Data Partition Device Name: /dev/cp-diska2
 	- Cluster Partition Device Name: /dev/cp-diska1
-EXEC
  
