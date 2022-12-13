@@ -23,20 +23,22 @@ Scripts start or stop on the active server in either cluster.
 5.	Install ECX 5.0 on all four servers, being sure to Filter Settings of Shared Disk
 6.	Open necessary ports through the firewall on each server for ECX
 7.	Reboot all servers
-8.	Create two clusters of two nodes each, Cluster-1 and Cluster-2 and add the following resources under the failover group:
-a.	fip resource
-b.	sd resource
+8.	Create two clusters of two nodes each, Cluster-1 and Cluster-2 (both nodes accessing the same disk), and add the following resources under the failover group:    
+    -	fip resource    
+    -	sd resource
 9.	Before uploading the configuration file, go to the API tab of Cluster Properties and Enable API Service (HTTP Communication Method is fine) in order to use RESTful API calls
 10.	Install node.js 10.16.0 or 10.21.0 on all cluster nodes (for RESTful API calls)
 11.	Test the clusters (move failover group between nodes in cluster) and also make sure that RESTful API commands work from nodes in Cluster-1 to nodes in Cluster-2
-e.g. curl.exe http://<fip or ip>:29009/api/v1/groups -u <User Name>:<Password>
-Note that the output will be in json format
-12.	Install a VM on the active node of Cluster-1 with all files stored on iSCSI shared disk
-13.	Enable all servers in each cluster as Hyper-V Replica servers using Kerberos authentication
+    ````
+    e.g. curl.exe http://<fip or ip>:29009/api/v1/groups -u <User Name>:<Password>
+    ````
+    Note that the output will be in json format
+12.	Install a VM on the active node of Cluster-1 with all files stored on the iSCSI shared disk
+13.	Enable all servers in each cluster as Hyper-V Replica servers with Kerberos authentication
 14.	From Hyper-V Manager enable replication from the VM on the active node of Cluster-1 to the active node of Cluster-2
-15.	After replication has completed, add failover scripts in ECX Manager
+15.	After replication has completed, add the failover scripts in ECX Manager
 16.	Test
-Testing
+## Testing
 •	Cluster-1 and Cluster-2 active node 
 Stop group
 Start group
