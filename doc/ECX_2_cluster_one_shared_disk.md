@@ -1,5 +1,34 @@
 # ECX 2 cluster one shared disk
 Configuring VM in 2 cluster one shared disk
+## Architecture
+- This configuration consists of 2 clusters and 1 iSCSI disk.
+- Make sure that the FO group is always running on one of the four nodes.
+
+```
+                          +-----------------+
+                          | Worker Cluster1 |
+                          | +-----------+   |
+                     +------| Worker1-1 |   |
+                     |    | +---+-------+   |
+                     |    |     |           |
+                     |    | +-----------+   |
+                     +------| Worker1-2 |   |
+                     |    | +---+-------+   |
+                     |    +-----------------+
++------------------+ |
+| Active Directory |-+    
++------------------+ |                     
+                     |    +-----------------+
+                     |    | Worker Cluster2 |
+                     |    | +-----------+   |
+                     +------| Worker2-1 |   |
+                     |    | +---+-------+   |
+                     |    |     |           |
+                     |    | +-----------+   |
+                     +------| Worker2-2 |   |
+                          | +---+-------+   |
+                          +-----------------+
+```
 
 ## Host servers' spec
 
@@ -63,3 +92,61 @@ Once OS installation is finished, do the following on each EC VM:
 	- Data Partition Device Name: /dev/cp-diska2
 	- Cluster Partition Device Name: /dev/cp-diska1
  
+7.Setting user name & password in EXPRESSCLUSTER.
+
+8.Once you complete the above steps on both EC servers, create an ECX cluster.
+
+
+- Floating IP address
+	- Should belong to the network connecting to iSCSI_switch.
+- Shared  disk
+	- File System: NTFS
+	- Data Partition Device Name: /dev/cp-diska2
+	- Cluster Partition Device Name: /dev/cp-diska1
+- Script resorce
+
+start.bat 
+```
+rem **********
+rem Parameter : the name of the VM to be controlled in the Hyper-V manager
+set VMNAME=VM1
+rem **********
+IF "%CLP_EVENT%" == "RECOVER" GOTO EXIT
+
+powershell -Command "Start-VM -Name %VMNAME% -Confirm:$false"
+
+IF "%CLP_EVENT%" == "RECOVER" GOTO RECOVER
+
+:EXIT
+```
+stop.bat
+```
+rem **********
+rem Parameter : the name of the VM to be controlled in the Hyper-V manager
+set VMNAME=vm1
+rem **********
+
+powershell -Command "Stop-VM -Name %VMNAME% -Force"
+:EXIT
+```
+Genw
+Add genw
+
+9.Create VM in cluster.
+- Edit Live Migrations Settings (under Hyper-V Settings)
+	- Check **Enable incoming and outgoing migrations**.
+
+10. Apply setting cluster
+
+11. Test
+12. 
+## Testing
+Cluster-1 and Cluster-2 active node 
+- Stop group
+- Start group
+- Move group to other node within same cluster
+- Move group back
+- Move group to other node within other cluster
+- Move group back
+
+## Potential Enhancements
