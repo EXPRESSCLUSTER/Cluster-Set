@@ -40,7 +40,11 @@ Configuring VM in 2 cluster one shared disk
 
 ## Setup procedure
 ### Create ECX Server & AD server
- - ***
+- Open network adapter settings and set an IP address for each vEthernet adapter.
+- Join servers to a domain and configure the firewall of the domain.
+- Login to the domain account.
+
+Subsequent procedures should be performed using the domain account.
  
 ### Installing Hyper-V
 
@@ -70,76 +74,82 @@ After completing Hyper-V installation, configure Hyper-V settings in Hyper-V Man
 
 Once OS installation is finished, do the following on each EC VM:
 
-1.Disable firewalld
+1. Disable firewalld
 
-2.Network settings
-- Configure IP addresses, gateway, DNS, proxy
+1. Network settings
+   - Configure IP addresses, gateway, DNS, proxy
 
-3.Connect iSCSI disk
- - **** 
+1. Connect iSCSI disk
 
-4.Install ECX rpm & Register ECX license files
+1. Install ECX rpm & Register ECX license files
 
-5.Reboot OS
+1. Reboot OS
 
-6.Once you complete the above steps on both EC servers, create an ECX cluster
-
-
-- Floating IP address
-	- Should belong to the network connecting to iSCSI_switch.
-- Shared  disk
-	- File System: NTFS
-	- Data Partition Device Name: /dev/cp-diska2
-	- Cluster Partition Device Name: /dev/cp-diska1
+1. Once you complete the above steps on both EC servers, create an ECX cluster
+   - Floating IP address
+   	  - Should belong to the network connecting to iSCSI_switch.
+   - Shared  disk
+   	  - File System: NTFS
+	  - Data Partition Device Name: /dev/cp-diska2
+	  - Cluster Partition Device Name: /dev/cp-diska1
  
-7.Setting user name & password in EXPRESSCLUSTER.
+1. Setting user name & password in EXPRESSCLUSTER.
 
-8.Once you complete the above steps on both EC servers, create an ECX cluster.
+1. Once you complete the above steps on both EC servers, create an ECX cluster.
+   - Floating IP address
+   	  - Should belong to the network connecting to iSCSI_switch.
+   - Shared  disk
+	  - File System: NTFS
+	  - Data Partition Device Name: /dev/cp-diska2
+	  - Cluster Partition Device Name: /dev/cp-diska1
+   - Script resorce
+   		- start.bat
+            
+           ```
+           rem **********
+           rem Parameter : the name of the VM to be controlled in the Hyper-V manager
+           set VMNAME=VM1
+           rem **********
+           IF "%CLP_EVENT%" == "RECOVER" GOTO EXIT
 
+           powershell -Command "Start-VM -Name %VMNAME% -Confirm:$false"
 
-- Floating IP address
-	- Should belong to the network connecting to iSCSI_switch.
-- Shared  disk
-	- File System: NTFS
-	- Data Partition Device Name: /dev/cp-diska2
-	- Cluster Partition Device Name: /dev/cp-diska1
-- Script resorce
+           IF "%CLP_EVENT%" == "RECOVER" GOTO RECOVER
 
-start.bat 
-```
-rem **********
-rem Parameter : the name of the VM to be controlled in the Hyper-V manager
-set VMNAME=VM1
-rem **********
-IF "%CLP_EVENT%" == "RECOVER" GOTO EXIT
+           :EXIT
+           ```
+   		- stop.bat
+           ```
+           rem **********
+           rem Parameter : the name of the VM to be controlled in the Hyper-V manager
+           set VMNAME=vm1
+           rem **********
 
-powershell -Command "Start-VM -Name %VMNAME% -Confirm:$false"
+           powershell -Command "Stop-VM -Name %VMNAME% -Force"
+           :EXIT
+           ```
+   - Custom monitor resource
+   		- Apply genw.bat
+	
+        	 ```
+           	 rem **********
+        	 rem Parameter : the name of the VM to be controlled in the Hyper-V manager
+        	 set VMNAME=vm1
+          	 rem **********
 
-IF "%CLP_EVENT%" == "RECOVER" GOTO RECOVER
+          	 rem powershell C:\Users\script\Recover-Group.ps1
+          	 exit 0
+          	 ```
+		 
+	         - https://github.com/EXPRESSCLUSTER/Cluster-Set/blob/main/script/Recover-Group.ps1
 
-:EXIT
-```
-stop.bat
-```
-rem **********
-rem Parameter : the name of the VM to be controlled in the Hyper-V manager
-set VMNAME=vm1
-rem **********
-
-powershell -Command "Stop-VM -Name %VMNAME% -Force"
-:EXIT
-```
-Genw
-Add genw
-
-9.Create VM in cluster.
+1. Create VM in cluster.
 - Edit Live Migrations Settings (under Hyper-V Settings)
 	- Check **Enable incoming and outgoing migrations**.
 
-10. Apply setting cluster
+1. Apply setting cluster
 
-11. Test
-12. 
+1. Test 
 ## Testing
 Cluster-1 and Cluster-2 active node 
 - Stop group
