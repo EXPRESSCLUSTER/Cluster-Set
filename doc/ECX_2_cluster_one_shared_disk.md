@@ -33,7 +33,7 @@ Configuring VM in 2 cluster one shared disk
 ## Host servers' spec
 
 - Windows Server 2019 Datacenter (Desktop Experience)
--  CPU
+- 1 CPU
 - 8GB RAM
 - 2 NICs
 - 2 HDDs, GB for OS and GB for EC-VM
@@ -57,10 +57,8 @@ Open **Server Manager** and click **Add roles and features** from the dashboard.
 
 After completing Hyper-V installation, configure Hyper-V settings in Hyper-V Manager.
 - Create Virtual Switches in Virtual Switch Manager.
-	- Management_switch was created during Hyper-V installation.
 	- NAT_switch (External) should be newly created.
 	- iSCSI_switch (External) should be newly created.
-	- VM_switch (External) should be newly created.
 
 - Create VM
 	- Edit Live Migrations Settings (under Hyper-V Settings)
@@ -159,4 +157,9 @@ Cluster-1 and Cluster-2 active node
 - Move group to other node within other cluster
 - Move group back
 
+## Problematic scenarios
+- The all node in both clusters fails over at the same time Concern:
+- Script keeps running but FO fails to start
 ## Potential Enhancements
+- Configuring 3 or more clusters
+- It is necessary to think about what to do when all nodes fail.
