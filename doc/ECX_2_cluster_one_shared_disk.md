@@ -140,14 +140,23 @@ Once OS installation is finished, do the following on each EC VM:
 	         - https://github.com/EXPRESSCLUSTER/Cluster-Set/blob/main/script/Recover-Group.ps1
 
 1. Create VM in cluster.
-- Edit Live Migrations Settings (under Hyper-V Settings)
-	- Check **Enable incoming and outgoing migrations**.
+	- Edit Live Migrations Settings (under Hyper-V Settings)
+		- Check **Enable incoming and outgoing migrations**.
 
 1. Apply setting cluster
 
 1. Test 
+
+## Script detail
+	- This script configures genw on all 4 nodes and starts it.
+	- Check the status of your cluster first
+	- If there is no FO group running in its own cluster, check the status of other clusters.
+	- If there are no FO group running in other clusters, try to start FO group in order to the priority.
+	- Make sure that the FO group is always running on one of the four nodes.
+	- Priority is server 1 , server 2, 3, 4
+	- If FO group cannot be started on server 1, try to start on server 2. If FO group cannot be started on server 2, try to start on server 3.
+
 ## Testing
-Cluster-1 and Cluster-2 active node 
 - Stop group
 - Start group
 - Move group to other node within same cluster
