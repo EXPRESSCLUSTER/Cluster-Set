@@ -65,12 +65,12 @@ After completing Hyper-V installation, configure Hyper-V settings in Hyper-V Man
 		- Check **Enable incoming and outgoing migrations**.
 
 
-### Set up an ECX Server
+### Set up an ECX server
 - Open network adapter settings and set an IP address for each vEthernet adapter.
 - Join servers to a domain and configure the firewall of the domain.
 - Login to the domain account.
 
-Once OS installation is finished, do the following on each EC VM:
+Once OS installation is finished, do the following on each ECX server.
 
 1. Disable firewalld
 
@@ -147,14 +147,14 @@ Once OS installation is finished, do the following on each EC VM:
 
 1. Test 
 
-## Script detail
-	- This script configures genw on all 4 nodes and starts it.
-	- Check the status of your cluster first
-	- If there is no FO group running in its own cluster, check the status of other clusters.
-	- If there are no FO group running in other clusters, try to start FO group in order to the priority.
-	- Make sure that the FO group is always running on one of the four nodes.
-	- Priority is server 1 , server 2, 3, 4
-	- If FO group cannot be started on server 1, try to start on server 2. If FO group cannot be started on server 2, try to start on server 3.
+## Details of the script to set in custom monitor resource
+- Run this script on all four nodes.
+- At first, check the status of own cluster.
+- If there is no FO group running in the cluster, check the status of other clusters.
+- If there are no FO group running in other clusters, try to start FO group in order to the priority.
+- Make sure that the FO group is always running on one of the four nodes.
+- Priority is server 1 , server 2, 3, 4.
+- If FO group cannot be started on server 1, try to start on server 2. If FO group cannot be started on server 2, try to start on server 3.
 
 ## Testing
 - Stop group
@@ -165,8 +165,8 @@ Once OS installation is finished, do the following on each EC VM:
 - Move group back
 
 ## Problematic scenarios
-- The all node in both clusters fails over at the same time Concern:
-- Script keeps running but FO fails to start
+- The all node in both clusters fails over at the same time.
+- Script keeps running but FO fails to start.
 ## Potential Enhancements
-- Configuring 3 or more clusters
+- Configuring 3 or more clusters.
 - It is necessary to think about what to do when all nodes fail.
