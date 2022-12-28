@@ -112,8 +112,6 @@ Once OS installation is finished, do the following on each EC VM:
 
            powershell -Command "Start-VM -Name %VMNAME% -Confirm:$false"
 
-           IF "%CLP_EVENT%" == "RECOVER" GOTO RECOVER
-
            :EXIT
            ```
    		- stop.bat
