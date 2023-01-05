@@ -43,9 +43,16 @@ Currently Cluster1 is assumed to host the Primary (source) server for replicatio
 ## Testing
 Cluster-1 and Cluster-2 active node 
 - Stop group
-- Start group
-- Move group to other node within same cluster
-- Move group back
+- Start group    
+  Expected result: No changes will be made and replication will continue normally.
+- Move group from primary node to standby node within cluster 1    
+  Expected result: VM will start on standby node and replication origination (VM replication's Primary server) will change to standby node. Replica server on cluster 2 will stay the same.
+- Move group back from standby node to primary node within cluster 1    
+  Expected result: VM will start on primary node and replication origination (VM replication's Primary server) will change to primary node. Replica server on cluster 2 will stay the same.
+- Move group from primary node to standby node within cluster 2    
+  Expected result: VM replication will change to standby node and standby node will become new Replica server. VM will remain in Off state.
+- Move group from standby node to primary node within cluster 2    
+  Expected result: VM replication will change to primary node and primary node will become new Replica server. VM will remain in Off state.
 ## Problematic scenarios
 - The active node in both clusters fails over at the same time
 Concern: Depending on the timing, the scripts to modify replication might interfere with each other, leading to failure re-enabling replication.
