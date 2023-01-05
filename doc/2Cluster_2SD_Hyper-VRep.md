@@ -1,5 +1,6 @@
 # ECX 2 cluster two shared disks with Hyper-V Replication
 This document gives more details about this particular solution.
+![overview](../images/ECX2Clu2SDHVR.png)
 ## Script Details
 - Variables need to be set in **SetEnvironment.bat** in order for the scripts to function properly.
 - **Start.bat** determines if any action needs to be taken. A PowerShell script is called, and if replication is determined to be progressing normally, no action is taken. If a ‘move group’ or failover just occurred, replication is changed to occur between the active servers on each cluster and the following actions are taken:
