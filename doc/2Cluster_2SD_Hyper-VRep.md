@@ -18,37 +18,38 @@ Scripts start or stop on the active server in either cluster. If the script fail
 
 Currently Cluster1 is assumed to host the Primary (source) server for replication and Cluster2 hosts the Replica server. Separate scripts exist for the Primary server and the Replica server. Once a method is created to determine which cluster hosts the Primary replication role with 100% accuracy, the Primary server and Replica server roles can be switched between clusters.
 ## Setup
-1.	Prepare four Windows 2019 servers (Standard or Datacenter) 
-2.	Join all servers to the same domain
-3.	Install Hyper-V on all servers
-4.	Create one iSCSI shared disk for both clusters and connect two servers to each disk 
-5.	Install ECX 5.0 on all four servers, being sure to Filter Settings of Shared Disk
-6.	Open necessary ports through the firewall on each server for ECX
-7.	Reboot all servers
+1.	Prepare four Windows 2019 servers (Standard or Datacenter). 
+2.	Join all servers to the same domain.
+3.	Install Hyper-V on all servers.
+4.	Create one iSCSI shared disk for both clusters and connect two servers to each disk. 
+5.	Install ECX 5.0 on all four servers, being sure to Filter Settings of Shared Disk.
+6.	Open necessary ports through the firewall on each server for ECX.
+7.	Reboot all servers.
 8.	Create two clusters of two nodes each, Cluster-1 and Cluster-2 (both nodes accessing the same disk), and add the following resources under the failover group:    
     -	fip resource    
     -	sd resource
-9.	Before uploading the configuration file, go to the API tab of Cluster Properties and Enable API Service (HTTP Communication Method is fine) in order to use RESTful API calls
-10.	Install node.js 10.16.0 or 10.21.0 on all cluster nodes (for RESTful API calls)
-11.	Test the clusters (move failover group between nodes in cluster) and also make sure that RESTful API commands work from nodes in Cluster-1 to nodes in Cluster-2
+9.	Before uploading the configuration file, go to the API tab of Cluster Properties and Enable API Service (HTTP Communication Method is fine) in order to use RESTful API calls.
+10.	Install node.js 10.16.0 or 10.21.0 on all cluster nodes (for RESTful API calls).
+11.	Test the clusters (move failover group between nodes in cluster) and also make sure that RESTful API commands work from nodes in Cluster-1 to nodes in Cluster-2.
     ````
     e.g. curl.exe http://<fip or ip>:29009/api/v1/groups -u <User Name>:<Password>
     ````
     Note that the output will be in json format
-12.	Install a VM on the active node of Cluster-1 with all files stored on the iSCSI shared disk
-13.	Enable all servers in each cluster as Hyper-V Replica servers with Kerberos authentication
-14.	From Hyper-V Manager enable replication from the VM on the active node of Cluster-1 to the active node of Cluster-2
-15.	After replication has completed, add the failover scripts in ECX Manager
-16.	Test
+12.	Install a VM on the active node of Cluster-1 with all files stored on the iSCSI shared disk.
+13.	Enable all servers in each cluster as Hyper-V Replica servers with Kerberos authentication.
+14.	From Hyper-V Manager enable replication from the VM on the active node of Cluster-1 to the active node of Cluster-2.
+15.	After replication has completed, add the failover scripts in ECX Manager.
+16.	Test to verify that the configuration is correct.
 ## Testing
 Cluster-1 and Cluster-2 active node 
 - Stop group
+  Expected result: VM will continue to run but replication will be interrupted.
 - Start group    
   Expected result: No changes will be made and replication will continue normally.
 - Move group from primary node to standby node within cluster 1    
-  Expected result: VM will start on standby node and replication origination (VM replication's Primary server) will change to standby node. Replica server on cluster 2 will stay the same.
+  Expected result: Replication origination (VM replication's Primary server) will change to standby node. Replica server on cluster 2 will stay the same. VM will start on standby node.
 - Move group back from standby node to primary node within cluster 1    
-  Expected result: VM will start on primary node and replication origination (VM replication's Primary server) will change to primary node. Replica server on cluster 2 will stay the same.
+  Expected result: Replication origination (VM replication's Primary server) will change to primary node. Replica server on cluster 2 will stay the same. VM will start on primary node.
 - Move group from primary node to standby node within cluster 2    
   Expected result: VM replication will change to standby node and standby node will become new Replica server. VM will remain in Off state.
 - Move group from standby node to primary node within cluster 2    
