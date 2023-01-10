@@ -3,16 +3,18 @@ This document gives more details about this particular solution.
 ![overview](../images/ECX2Clu2SDHVR.png)
 ## Script Details
 - Variables need to be set in **SetEnvironment.bat** in order for the scripts to function properly.
-- **Start.bat** determines if any action needs to be taken. A PowerShell script is called, and if replication is determined to be progressing normally, no action is taken. If a ‘move group’ or failover just occurred, replication is changed to occur between the active servers on each cluster and the following actions are taken by calling #ChangePrimary.ps1# or #ChangeReplica.ps1#:
+- **Start.bat** determines if any action needs to be taken. A PowerShell script is called, and if replication is determined to be progressing normally, no action is taken. If a ‘move group’ or failover just occurred, replication is changed to occur between the active servers on each cluster and the following actions are taken by calling *ChangePrimary.ps1* or *ChangeReplica.ps1*:
   -	Determine which cluster has the Hyper-V Primary server role and Replica server role.
   -	Remove replication from the Primary and Replica servers if still enabled.
   -	Register the VM in Hyper-V Manager if it has not been done on the server the script is run from.
   -	Enable the VM files on the Hyper-V Replica’s Replica server as the replica source.
   -	Enable VM replication from the Hyper-V Replica’s Primary server to the Replica server.
   -	Start replication.
-  -	Start VM on Hyper-V Replication Primary server*    
-    *This is the only step not done on the Replica server.    
-- **Stop.bat** determines what kind of stop event occurred. If the script resource or group was stopped, no action is taken. If it is a ‘group move’ or failover, a PowerShell script is called and VM replication is removed from the Hyper-V Primary and Replica servers. The VM is also stopped.
+  -	Start VM on Hyper-V Replication Primary server\*    
+    \*This is the only step not done on the Replica server.    
+    \*\*Be sure to change the user name and password variables in the scripts
+- **Stop.bat** determines what kind of stop event occurred. If the script resource or group was stopped, no action is taken. If it is a ‘group move’ or failover on the Primary server, a PowerShell script (*stop.ps1*) is called and VM replication is removed from the Hyper-V Primary and Replica servers. The VM is also stopped.    
+    \*Be sure to change the user name and password variables in the stop.ps1 PowerShell script
     
 Scripts start or stop on the active server in either cluster. If the script fails to enable replication, stopping the script resource and starting it again may fix the problem.    
 
