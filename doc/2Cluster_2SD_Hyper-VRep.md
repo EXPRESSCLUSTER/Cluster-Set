@@ -46,7 +46,7 @@ Link to [scripts](../script/2Cluster_2SD_Hyper-VRep/).
 16.	Test to verify that the configuration is correct.
 ## Testing
 Cluster-1 and Cluster-2 active node 
-- Stop group
+- Stop group    
   Expected result: VM will continue to run but replication will be interrupted.
 - Start group    
   Expected result: No changes will be made and replication will continue normally.
