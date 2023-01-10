@@ -2,7 +2,7 @@
 Configuring VM in 2 cluster one shared disk
 ## Architecture
 - This configuration consists of 2 clusters and 1 iSCSI disk.
-- Make sure that the FO group is always running on one of the four nodes.
+- Make sure that the failover group is always running on one of the four nodes.
 
 ```
                           +-----------------+
@@ -18,6 +18,10 @@ Configuring VM in 2 cluster one shared disk
 +------------------+ |
 | Active Directory |-+    
 +------------------+ |                     
+                     |
++------------------+ |
+| iSCSI Disk       |-+    
++------------------+ |
                      |    +-----------------+
                      |    | Worker Cluster2 |
                      |    | +-----------+   |
@@ -30,30 +34,28 @@ Configuring VM in 2 cluster one shared disk
                           +-----------------+
 ```
 
-## Host servers' spec
+## Worker Cluster Servers' spec
 
 - Windows Server 2019 Datacenter (Desktop Experience)
 - 1 CPU
 - 8GB RAM
 - 2 NICs
-- 2 HDDs, GB for OS and GB for EC-VM
+- 2 HDDs, 10 GB for OS and GB for VM
 
 ## Setup procedure
 ### Create ECX Server & AD server
-- Open network adapter settings and set an IP address for each vEthernet adapter.
+- Open network adapter settings and set an IP address.
 - Join servers to a domain and configure the firewall of the domain.
-- Login to the domain account.
-
-Subsequent procedures should be performed using the domain account.
+- Login to Worker Cluster by using domain account.
  
 ### Installing Hyper-V
 
-Open **Server Manager** and click **Add roles and features** from the dashboard.
-- Check **Hyper-V** under **Server Roles**.
-- Create one virtual switch for external access.
-- Check **Allow this server to send and receive live migrations of virtual machines**.
+Open **Server Manager** and click **Add roles and features** from the dashboard in Worker Cluster.
+1. Check **Hyper-V** under **Server Roles**.
+2. Create one virtual switch for external access.
+3. Check **Allow this server to send and receive live migrations of virtual machines**.
 	- Select **Use Credential Security Support Provider (CredSSP)**.
-- VM's default location can be configured iSCSI disk.
+4. VM's default location can be configured iSCSI disk.
 
 After completing Hyper-V installation, configure Hyper-V settings in Hyper-V Manager.
 - Create Virtual Switches in Virtual Switch Manager.
@@ -150,11 +152,11 @@ Once OS installation is finished, do the following on each ECX server.
 ## Details of the script to set in custom monitor resource
 - Run this script on all four nodes.
 - At first, check the status of own cluster.
-- If there is no FO group running in the cluster, check the status of other clusters.
-- If there are no FO group running in other clusters, try to start FO group in order to the priority.
-- Make sure that the FO group is always running on one of the four nodes.
+- If there is no failover group running in the cluster, check the status of other clusters.
+- If there are no failover group running in other clusters, try to start failover group in order to the priority.
+- Make sure that the failover group is always running on one of the four nodes.
 - Priority is server 1 , server 2, 3, 4.
-- If FO group cannot be started on server 1, try to start on server 2. If FO group cannot be started on server 2, try to start on server 3.
+- If failover group cannot be started on server 1, try to start on server 2. If failover group cannot be started on server 2, try to start on server 3.
 
 ## Testing
 - Stop group
@@ -166,7 +168,7 @@ Once OS installation is finished, do the following on each ECX server.
 
 ## Problematic scenarios
 - The all node in both clusters fails over at the same time.
-- Script keeps running but FO fails to start.
+- Script keeps running but failover fails to start.
 ## Potential Enhancements
 - Configuring 3 or more clusters.
 - It is necessary to think about what to do when all nodes fail.
