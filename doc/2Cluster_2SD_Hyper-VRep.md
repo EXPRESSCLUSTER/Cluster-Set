@@ -12,9 +12,9 @@ This document gives more details about this particular solution.
   -	Start replication.
   -	Start VM on Hyper-V Replication Primary server\*    
     \*This is the only step not done on the Replica server.    
-    \*\*Be sure to change the user name and password variables in the scripts
+    \*\*Be sure to change the user name and password variables in the scripts.
 - **Stop.bat** determines what kind of stop event occurred. If the script resource or group was stopped, no action is taken. If it is a ‘group move’ or failover on the Primary server, a PowerShell script (*stop.ps1*) is called and VM replication is removed from the Hyper-V Primary and Replica servers. The VM is also stopped.    
-    \*Be sure to change the user name and password variables in the stop.ps1 PowerShell script
+    \*Be sure to change the user name and password variables in the stop.ps1 PowerShell script.
     
 Scripts start or stop on the active server in either cluster. If the script fails to enable replication, stopping the script resource and starting it again may fix the problem.    
 
