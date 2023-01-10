@@ -73,7 +73,7 @@ Cluster-1 and Cluster-2 active node
 - Why remove replication before moving a group or failing over?    
   Answer: This is better explained by laying out what happens when a move group or failover occurs without removing replication.    
   Scenario: Failover group on cluster1 is moved from server1 to server2 with replication going to cluster2 server1
-  1. VM replication is still configured on cluster1 server1 with cluster1 server1 as Primary to cluster2 server1 as Replica, but it no longer has access to the disk. Replication State becomes Error and Replication Health becomes Critical.
+  1. VM replication is still configured on cluster1 server1 with cluster1 server1 as Primary to cluster2 server1 as Replica, but it no longer has access to the disk. Replication is cut off, Replication State becomes Error and Replication Health becomes Critical.
   2. Cluster1 server2 has control of the disk and the start script clears the replication setting on cluster2 server1. It then clears the replication setting on cluster1 server2 (if it exists) before setting up VM replication from cluster1 server2 as Primary to cluster2 server1 as Replica.
   3. Now move the group back to cluster1 server1.
   4. VM replication is still configured on cluster1 server2 with cluster1 server2 as Primary to cluster2 server1 as Replica, but it no longer has access to the disk. Replication State becomes Error and Replication Health becomes Critical.
