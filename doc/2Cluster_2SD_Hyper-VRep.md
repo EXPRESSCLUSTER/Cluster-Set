@@ -3,7 +3,7 @@ This document gives more details about this particular solution.
 ![overview](../images/ECX2Clu2SDHVR.png)
 ## Script Details
 - Variables need to be set in **SetEnvironment.bat** in order for the scripts to function properly.
-- **Start.bat** determines if any action needs to be taken. A PowerShell script is called, and if replication is determined to be progressing normally, no action is taken. If a ‘move group’ or failover just occurred, replication is changed to occur between the active servers on each cluster and the following actions are taken:
+- **Start.bat** determines if any action needs to be taken. A PowerShell script is called, and if replication is determined to be progressing normally, no action is taken. If a ‘move group’ or failover just occurred, replication is changed to occur between the active servers on each cluster and the following actions are taken by calling #ChangePrimary.ps1# or #ChangeReplica.ps1#:
   -	Determine which cluster has the Hyper-V Primary server role and Replica server role.
   -	Remove replication from the Primary and Replica servers if still enabled.
   -	Register the VM in Hyper-V Manager if it has not been done on the server the script is run from.
