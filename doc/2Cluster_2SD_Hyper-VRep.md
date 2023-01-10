@@ -59,8 +59,8 @@ Cluster-1 and Cluster-2 active node
 - Move group from standby node to primary node within cluster 2    
   Expected result: VM replication will change to primary node and primary node will become new Replica server. VM will remain in Off state.
 ## Problematic scenarios
-- The active node in both clusters fails over at the same time
-Concern: Depending on the timing, the scripts to modify replication might interfere with each other, leading to failure re-enabling replication.
+- The active node in both clusters fails over at the same time    
+  Concern: Depending on the timing, the scripts to modify replication might interfere with each other, leading to failure re-enabling replication.
 
 ## Potential Enhancements
 - Hyper-V replication monitoring
