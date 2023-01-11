@@ -65,6 +65,7 @@ Cluster-1 and Cluster-2 active node
 ## Potential Enhancements
 - Hyper-V replication monitoring
 - Cross-cluster VM failover
+- More secure username and password
 
 ## Other Notes
 - Stopping the script resource and starting it again should fix replication in the event that the scripts failed or did not complete after a group move or failover.
