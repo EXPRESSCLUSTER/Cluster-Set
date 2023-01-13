@@ -46,9 +46,9 @@ Configuring VM in 2 cluster one shared disk
 ### Create ECX Server & AD server
 - Open network adapter settings and set an IP address.
 - Join servers to a domain and configure the firewall of the domain.
-- Login to Worker Cluster by using domain account.
+- Login to Worker Cluster using the domain account.
  
-### Installing Hyper-V
+### Install Hyper-V
 
 Open **Server Manager** and click **Add roles and features** from the dashboard in Worker Cluster.
 1. Check **Hyper-V** under **Server Roles**.
@@ -59,7 +59,6 @@ Open **Server Manager** and click **Add roles and features** from the dashboard 
 
 After completing Hyper-V installation, configure Hyper-V settings in Hyper-V Manager.
 - Create Virtual Switches in Virtual Switch Manager.
-	- NAT_switch (External) should be newly created.
 	- iSCSI_switch (External) should be newly created.
 
 - Create VM
@@ -68,20 +67,15 @@ After completing Hyper-V installation, configure Hyper-V settings in Hyper-V Man
 
 
 ### Set up an ECX server
-- Open network adapter settings and set an IP address for each vEthernet adapter.
-- Join servers to a domain and configure the firewall of the domain.
-- Login to the domain account.
 
-Once OS installation is finished, do the following on each ECX server.
-
-1. Disable firewalld
+1. Disable firewalld for testing.
 
 1. Network settings
-   - Configure IP addresses, gateway, DNS, proxy
+   - Configure IP addresses, gateway, DNS, (proxy)
 
 1. Connect iSCSI disk
 
-1. Install ECX rpm & Register ECX license files
+1. Install ECX  & Register ECX license files
 
 1. Reboot OS
 
@@ -89,26 +83,15 @@ Once OS installation is finished, do the following on each ECX server.
    - Floating IP address
    	  - Should belong to the network connecting to iSCSI_switch.
    - Shared  disk
-   	  - File System: NTFS
-	  - Data Partition Device Name: /dev/cp-diska2
-	  - Cluster Partition Device Name: /dev/cp-diska1
- 
-1. Setting user name & password in EXPRESSCLUSTER.
-
-1. Once you complete the above steps on both EC servers, create an ECX cluster.
-   - Floating IP address
-   	  - Should belong to the network connecting to iSCSI_switch.
-   - Shared  disk
-	  - File System: NTFS
-	  - Data Partition Device Name: /dev/cp-diska2
-	  - Cluster Partition Device Name: /dev/cp-diska1
+   	  -Allocate a partition for disk heartbeat.
+      	  	-Configure it as RAW partition without formatting.
    - Script resorce
    		- start.bat
             
            ```
            rem **********
            rem Parameter : the name of the VM to be controlled in the Hyper-V manager
-           set VMNAME=VM1
+           set VMNAME=vm1
            rem **********
            IF "%CLP_EVENT%" == "RECOVER" GOTO EXIT
 
@@ -140,6 +123,9 @@ Once OS installation is finished, do the following on each ECX server.
           	 ```
 		 
 	         - https://github.com/EXPRESSCLUSTER/Cluster-Set/blob/main/script/Recover-Group.ps1
+		 - ../script/Recover-Group.ps1
+			 - Timeout must be more than or equal to sleep.
+1. Setting user name & password in EXPRESSCLUSTER to use the RestfulAPI.
 
 1. Create VM in cluster.
 	- Edit Live Migrations Settings (under Hyper-V Settings)
@@ -147,7 +133,7 @@ Once OS installation is finished, do the following on each ECX server.
 
 1. Apply setting cluster
 
-1. Test 
+1. Test  to verify that the configuration is correct.
 
 ## Details of the script to set in custom monitor resource
 - Run this script on all four nodes.
@@ -155,20 +141,22 @@ Once OS installation is finished, do the following on each ECX server.
 - If there is no failover group running in the cluster, check the status of other clusters.
 - If there are no failover group running in other clusters, try to start failover group in order to the priority.
 - Make sure that the failover group is always running on one of the four nodes.
-- Priority is server 1 , server 2, 3, 4.
-- If failover group cannot be started on server 1, try to start on server 2. If failover group cannot be started on server 2, try to start on server 3.
+- Set the priority is server 1 , 2, 3, 4.
+- If FO group cannot starte on server 1, try to start on server 2. If FO group cannot started on server 2, try to start on server 3.
 
 ## Testing
 - Stop group
+	 - Expected result:  FO group & VM starts on the server with the highest priority.
 - Start group
+	 - Expected result:  FO group & VM starts on the server.
 - Move group to other node within same cluster
+ 	 - Expected result:  FO group & VM starts on other node within same cluster.
 - Move group back
+	 - Expected result:  FO group & VM starts on the returned server.
 - Move group to other node within other cluster
-- Move group back
+ 	 - Expected result:  FO group & VM starts on other node within other cluster.
+- Move group back on other cluster
+	 - Expected result:  FO group & VM starts on the returned cluster.
 
-## Problematic scenarios
-- The all node in both clusters fails over at the same time.
-- Script keeps running but failover fails to start.
 ## Potential Enhancements
-- Configuring 3 or more clusters.
 - It is necessary to think about what to do when all nodes fail.
