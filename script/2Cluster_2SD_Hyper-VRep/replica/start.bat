@@ -1,8 +1,3 @@
-rem *************************************
-rem * changereplica.bat                 *
-rem *************************************
-
-
 rem ***************************************
 rem *              start.bat              *
 rem *                                     *
@@ -36,6 +31,12 @@ call SetEnvironment.bat
 PowerShell -ExecutionPolicy ByPass -File .\changereplica.ps1 -noprofile
 set ret=%ERRORLEVEL%
 echo Start.bat return value: %ret%
+
+rem FLAG: unlike script/primary/start.bat, the two failure-handling lines below are
+rem commented out, so a failed changereplica.ps1 run is not logged here. This may be
+rem intentional (replica-side failures treated as non-fatal) but it's inconsistent
+rem with the primary side and undocumented -- confirm before enabling.
+
 rem exit %ret%
 rem clplogcmd -m "Failed to enable replication. Stop script and start again." -l ERR
 
