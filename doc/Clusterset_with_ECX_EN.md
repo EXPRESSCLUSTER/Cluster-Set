@@ -2,13 +2,13 @@
 
 ## What is Cluster Set?
 - Features introduced from Windows Server 2019. See below for an overview.
-  - https://docs.microsoft.com/ja-jp/azure-stack/hci/deploy/cluster-set
+  - https://docs.microsoft.com/en-us/azure-stack/hci/deploy/cluster-set
 
 ## Benefit of Cluster set
 1. Scalability
 2. LoadBalancing
-3. Perform FO with VM backup restore (method ?,I don't understand much. I need to think about benefit)
-4. Cluster-Configure a cluster consisting of VMs in the set with ECX to increase availability. (method? ?,I don't understand much. I need to think about benefit)
+3. Perform FO with VM backup restore (method? I don't understand much yet. I need to think about the benefit of doing this.)
+4. Cluster-Configure a cluster consisting of VMs in the set with ECX to increase availability. (method? I don't understand much yet. I need to think about the benefit of doing this.)
 
 ## How to verify the benefits
 1. Measure the MTTR and MTBF, calculate the system availability, and compare the availability of the ECX alone with that of the cluster set.
@@ -17,11 +17,11 @@
 
 ## How to realize Cluster Set
 - final goals
-  --Achieves the same function as Cluster Set only with ECX without WSFC (whether it is superior to WSFC or not is set aside)
+  --Achieve the same function as Cluster Set, only with ECX and without WSFC (whether it is superior to WSFC or not is set aside)
   
 
 ### Limitations
-- (First of all,)Live Migration is excluded.
+- (First of all) Live Migration is excluded.
 - Set the data replication method aside.
 　- First, focus on the node management method.
 
@@ -92,7 +92,7 @@
 
 ### 2nd step: Handing over data between workers
 - Since mirror disk resources and hybrid disk resources cannot be used, it is necessary to consider ways to take over the data by other means.
-- If you want to failover the VM, can you take advantage of the backup and restore of the VM
+- If you want to failover the VM, can you take advantage of the backup and restore of the VM?
 
 ## Script Outline
 ```
@@ -124,10 +124,13 @@
 ### Feature
 - A cluster set consisting of 2 clusters and 2 nodes
 - Make sure that the FO group is always running on one of the four nodes.
-- Priority is server 1 , server 2, 3, 4
+- Priority is server 1, server 2, 3, 4.
 - If FO group cannot be started on server 1, try to start on server 2.
 
 ### Script description
+
+The script described below is [`Recover-Group.ps1`](../script/Recover-Group.ps1).
+
 - l1-l26  
   - Set server and user information.
 - l27-l58  
@@ -136,7 +139,7 @@
   - Get FO group status of own cluster
   - If any one is online, exit this program.
   - If both are offline, proceed to next step.
-- l112~165  
+- l112-l165  
   - Get FO status of other cluster
   - If any one is online, end
   - If both are offline, proceed to next step
@@ -149,4 +152,4 @@
   - Processing when the custom monitor is not running on any one of the servers
   - Attempt to start FO group in order from server 1 according to the priority
   - If there is a server that can be started, exit there
-  - If the server cannot be started, start it on server 2 in order to the priority
+  - If the server cannot be started, start it on server 2 in order of the priority
