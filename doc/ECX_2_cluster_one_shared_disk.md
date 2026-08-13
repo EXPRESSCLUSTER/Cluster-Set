@@ -40,14 +40,14 @@ Configuring VM in 2 cluster one shared disk
 - 1 CPU
 - 8GB RAM
 - 2 NICs
-- 2 HDDs, 10 GB for OS and GB for VM
+- 2 HDDs, 100 GB for OS and 10 GB for VM
 
 ## Setup procedure
 ### Create ECX Server & AD server
 - Open network adapter settings and set an IP address.
 - Join servers to a domain and configure the firewall of the domain.
 - Login to Worker Cluster using the domain account.
- 
+
 ### Install Hyper-V
 
 Open **Server Manager** and click **Add roles and features** from the dashboard in Worker Cluster.
@@ -55,94 +55,93 @@ Open **Server Manager** and click **Add roles and features** from the dashboard 
 2. Create one virtual switch for external access.
 3. Check **Allow this server to send and receive live migrations of virtual machines**.
 	- Select **Use Credential Security Support Provider (CredSSP)**.
-4. VM's default location can be configured iSCSI disk.
+4. VM's default location can be configured as the iSCSI disk.
 
 After completing Hyper-V installation, configure Hyper-V settings in Hyper-V Manager.
 - Create Virtual Switches in Virtual Switch Manager.
 	- iSCSI_switch (External) should be newly created.
-
 - Create VM
 	- Edit Live Migrations Settings (under Hyper-V Settings)
 		- Check **Enable incoming and outgoing migrations**.
 
-
 ### Set up an ECX server
 
-1. Disable firewalld for testing.
+1. Disable firewall for testing.
 
 1. Network settings
    - Configure IP addresses, gateway, DNS, (proxy)
 
 1. Connect iSCSI disk
 
-1. Install ECX  & Register ECX license files
+1. Install ECX & Register ECX license files
 
 1. Reboot OS
 
 1. Once you complete the above steps on both EC servers, create an ECX cluster
    - Floating IP address
-   	  - Should belong to the network connecting to iSCSI_switch.
-   - Shared  disk
-   	  -Allocate a partition for disk heartbeat.
-      	  	-Configure it as RAW partition without formatting.
-   - Script resorce
-   		- start.bat
-            
-           ```
-           rem **********
-           rem Parameter : the name of the VM to be controlled in the Hyper-V manager
-           set VMNAME=vm1
-           rem **********
-           IF "%CLP_EVENT%" == "RECOVER" GOTO EXIT
+      - Should belong to the network connecting to iSCSI_switch.
+   - Shared disk
+      - Allocate a partition for disk heartbeat.
+        - Configure it as a RAW partition without formatting.
+   - Script resources - copy the code below into each script file (\*Note that these scripts are not available in this repository for download)
+      - start.bat
 
-           powershell -Command "Start-VM -Name %VMNAME% -Confirm:$false"
+        ```
+        rem **********
+        rem Parameter : the name of the VM to be controlled in the Hyper-V manager
+        set VMNAME=vm1
+        rem **********
+        IF "%CLP_EVENT%" == "RECOVER" GOTO EXIT
 
-           :EXIT
-           ```
-   		- stop.bat
-           ```
-           rem **********
-           rem Parameter : the name of the VM to be controlled in the Hyper-V manager
-           set VMNAME=vm1
-           rem **********
+        powershell -Command "Start-VM -Name %VMNAME% -Confirm:$false"
 
-           powershell -Command "Stop-VM -Name %VMNAME% -Force"
-           :EXIT
-           ```
+        :EXIT
+        ```
+      - stop.bat
+
+        ```
+        rem **********
+        rem Parameter : the name of the VM to be controlled in the Hyper-V manager
+        set VMNAME=vm1
+        rem **********
+
+        powershell -Command "Stop-VM -Name %VMNAME% -Force"
+        :EXIT
+        ```
    - Custom monitor resource
-   		- Apply genw.bat
-	
-        	 ```
-           	 rem **********
-        	 rem Parameter : the name of the VM to be controlled in the Hyper-V manager
-        	 set VMNAME=vm1
-          	 rem **********
+      - Apply genw.bat
 
-          	 rem powershell C:\Users\script\Recover-Group.ps1
-          	 exit 0
-          	 ```
-		 
-	         - https://github.com/EXPRESSCLUSTER/Cluster-Set/blob/main/script/Recover-Group.ps1
-		 - ../script/Recover-Group.ps1
-			 - Timeout must be more than or equal to sleep.
+        ```
+        rem **********
+        rem Parameter : the name of the VM to be controlled in the Hyper-V manager
+        set VMNAME=vm1
+        rem **********
+
+        rem powershell C:\Users\script\Recover-Group.ps1
+        exit 0
+        ```
+
+        - https://github.com/EXPRESSCLUSTER/Cluster-Set/blob/main/script/Recover-Group.ps1
+        - ../script/Recover-Group.ps1
+          - Timeout must be more than or equal to sleep.
 1. Setting user name & password in EXPRESSCLUSTER to use the RestfulAPI.
 
 1. Create VM in cluster.
 	- Edit Live Migrations Settings (under Hyper-V Settings)
 		- Check **Enable incoming and outgoing migrations**.
 
-1. Apply setting cluster
+1. Apply cluster configuration file
 
-1. Test  to verify that the configuration is correct.
+1. Test to verify that the configuration is correct.
 
 ## Details of the script to set in custom monitor resource
 - Run this script on all four nodes.
 - At first, check the status of own cluster.
 - If there is no failover group running in the cluster, check the status of other clusters.
-- If there are no failover group running in other clusters, try to start failover group in order to the priority.
+- If there are no failover groups running on other clusters, try to start a failover group in order of priority.
 - Make sure that the failover group is always running on one of the four nodes.
-- Set the priority is server 1 , 2, 3, 4.
-- If FO group cannot starte on server 1, try to start on server 2. If FO group cannot started on server 2, try to start on server 3.
+- Set the priority as server 1, 2, 3, 4.
+- If FO group cannot be started on server 1, try to start on server 2. If FO group cannot be started on server 2, try to start on server 3.
 
 ## Testing
 - Stop group
@@ -155,7 +154,7 @@ After completing Hyper-V installation, configure Hyper-V settings in Hyper-V Man
 	 - Expected result:  FO group & VM starts on the returned server.
 - Move group to other node within other cluster
  	 - Expected result:  FO group & VM starts on other node within other cluster.
-- Move group back on other cluster
+- Move group back to other cluster
 	 - Expected result:  FO group & VM starts on the returned cluster.
 
 ## Potential Enhancements
