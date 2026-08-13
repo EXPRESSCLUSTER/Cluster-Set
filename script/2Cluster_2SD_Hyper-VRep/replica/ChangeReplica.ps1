@@ -7,10 +7,10 @@
 #Assign variables
 #Change user name and password below!!!
 $user = "Administrator"
-$pwd = ""
-$pass = ConvertTo-SecureString $pwd -AsPlainText -Force
+$password = ""
+$pass = ConvertTo-SecureString $password -AsPlainText -Force
 $cred = New-Object System.Management.Automation.PSCredential ($user,$pass)
-$OppClusterInfo = curl.exe -s $env:RestURI -u $user:$pwd | ConvertFrom-Json
+$OppClusterInfo = curl.exe -s $env:RestURI -u $user:$password | ConvertFrom-Json
 $OppPriSrv = $OppClusterInfo.groups.current
 $OwnRepSrv = $env:COMPUTERNAME
 $RetVal = 0
@@ -166,4 +166,4 @@ Write-Output "Return value is: $RetVal"
 
 # (For debugging) Stop-Transcript
 
-exit $Retval
+exit $RetVal
