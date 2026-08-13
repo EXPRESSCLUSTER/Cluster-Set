@@ -3,7 +3,7 @@ This document gives more details about this particular solution.
 ![overview](../images/ECX2Clu2SDHVR.png)
 ## Script Details
 - Variables need to be set in **SetEnvironment.bat** in order for the scripts to function properly.
-- **Start.bat** determines if any action needs to be taken. A PowerShell script is called, and if replication is determined to be progressing normally, no action is taken. If a ‘move group’ or failover just occurred, replication is changed to occur between the active servers on each cluster and the following actions are taken by calling *ChangePrimary.ps1* or *ChangeReplica.ps1*:
+- **start.bat** determines if any action needs to be taken. A PowerShell script is called, and if replication is determined to be progressing normally, no action is taken. If a ‘move group’ or failover just occurred, replication is changed to occur between the active servers on each cluster and the following actions are taken by calling *ChangePrimary.ps1* or *ChangeReplica.ps1*:
   -	Determine which cluster has the Hyper-V Primary server role and Replica server role.
   -	Remove replication from the Primary and Replica servers if still enabled.
   -	Register the VM in Hyper-V Manager if it has not been done on the server the script is run from.
@@ -13,9 +13,14 @@ This document gives more details about this particular solution.
   -	Start VM on Hyper-V Replication Primary server\*    
     \*This is the only step not done on the Replica server.    
     \*\*Be sure to change the user name and password variables in the scripts.
-- **Stop.bat** determines what kind of stop event occurred. If the script resource or group was stopped, no action is taken. If it is a ‘group move’ or failover on the Primary server, a PowerShell script (*stop.ps1*) is called and VM replication is removed from the Hyper-V Primary and Replica servers. The VM is also stopped.    
-    \*Be sure to change the user name and password variables in the *stop.ps1* PowerShell script.
-    
+- **stop.bat** determines what kind of stop event occurred. If the script resource or group was stopped, no action is taken. If it is a ‘group move’ on the Primary server, a PowerShell script (*Stop.ps1*) is called and VM replication is removed from the Hyper-V Primary and Replica servers. The VM is also stopped.    
+    \*Be sure to change the user name and password variables in the *Stop.ps1* PowerShell script.
+
+    <!-- FLAG: as currently written, script/primary/stop.bat only calls Stop.ps1 on the
+         GROUPMOVE factor, not on failover. Should Stop.ps1 be called on failover too?
+         And script/replica/stop.bat doesn't call any PowerShell script on any factor.
+         Is this correct? If I revisit ClusterSet again, I will check. -->
+
 Scripts start or stop on the active server in either cluster. If the script fails to enable replication, stopping the script resource and starting it again may fix the problem.    
 
 Currently Cluster1 is assumed to host the Primary (source) server for replication and Cluster2 hosts the Replica server. Separate scripts exist for the Primary server and the Replica server. Once a method is created to determine which cluster hosts the Primary replication role with 100% accuracy, the Primary server and Replica server roles can be switched between clusters.    
@@ -70,13 +75,13 @@ Cluster-1 and Cluster-2 active node
 ## Other Notes
 - Stopping the script resource and starting it again should fix replication in the event that the scripts failed or did not complete after a group move or failover.
 - Why not use Get-VMReplication to figure out which VM replication server is the Primary server and which one is the Replica server after a group move or failover?    
-  Answer: When a group move occurs from server1 in cluster 1 to server2 in cluster 1, the Stop script removes VM replication from both the Primary server and the Replica server. Since VM replication isn't set up after a group move or failover, the Get-VMReplication command will not return any result and so it is not possible to see which direction replication was going.
+  *Answer*: When a group move occurs from server1 in cluster 1 to server2 in cluster 1, the Stop script removes VM replication from both the Primary server and the Replica server. Since VM replication isn't set up after a group move or failover, the Get-VMReplication command will not return any result and so it is not possible to see which direction replication was going.
 - Why remove replication before moving a group or failing over?    
-  Answer: This is better explained by laying out what happens when a move group or failover occurs without removing replication.    
+  *Answer*: This is better explained by laying out what happens when a move group or failover occurs without removing replication.    
   Scenario: Resource group is running on cluster1, server1. VM replication occurs with cluster1, server1 as Primary server and cluster2, server 1 as Replica server. The group resource is moved from server1 to server2 (standby server) within cluster1.
-  1. VM replication is still configured on cluster1, server1 -- cluster1, server1 isthe Primary server and cluster2, server1 is the Replica server. Access to the disk is lost and replication is cut off. The Replication State becomes *Error* and Replication Health becomes *Critical*.
+  1. VM replication is still configured on cluster1, server1 -- cluster1, server1 is the Primary server and cluster2, server1 is the Replica server. Access to the disk is lost and replication is cut off. The Replication State becomes *Error* and Replication Health becomes *Critical*.
   2. Cluster1, server2 has control of the disk and the start script clears the replication setting on cluster2, server1. It then clears the replication setting on cluster1, server2 (if it exists) before setting up VM replication from cluster1, server2 as Primary server to cluster2, server1 as Replica server.
   3. Now move the group back to cluster1, server1.
   4. VM replication is still configured on cluster1, server2 -- cluster1, server2 is the Primary server and cluster2, server1 is the Replica server. Access to the disk is lost and replication is cut off. The Replication State becomes *Error* and Replication Health becomes *Critical*.
-  5. Cluster1, server1 has control of the disk again. The Replication State on cluster1, server1 is still *Error* and Replication Health is *Critical*. It is very difficult to manage replication in this condition, so replication needs to be removed from cluster1, server1 and from cluster2, server1 and set up again. Removing replication on the other cluster (cluster2, server1) succeeds, but removing it from the local server (cluster1, server1) often fails, leading to a failure to set up replication again. The Windows error message returned is "Operation not allowed for virtual machine '<VM Name>' because the configuration was not accessible. Try again later." "Hyper-V failed to remove replication for '\<VM Name\>': Operation aborted (0x80004004)." I haven't been able to figure out why the 'configuration was not accessible' but have confirmed that the disk WAS accessible. This is why replication is removed at the beginning of a group move or failover in the stop script.    
-  Note: This problem only seemed to show up on the cluster with the Primary replication server (server1). Running the start script again (stop the script and start again from ECX Manager) would often fix the problem. But for some reason, calling the start script again from start.bat (if replication configuration failed) would usually not succeed.
+  5. Cluster1, server1 has control of the disk again. The Replication State on cluster1, server1 is still *Error* and Replication Health is *Critical*. It is very difficult to manage replication in this condition, so replication needs to be removed from cluster1, server1 and from cluster2, server1 and set up again. Removing replication on the other cluster (cluster2, server1) succeeds, but removing it from the local server (cluster1, server1) often fails, leading to a failure to set up replication again. The Windows error message returned is "Operation not allowed for virtual machine '\<VM Name\>' because the configuration was not accessible. Try again later." "Hyper-V failed to remove replication for '\<VM Name\>': Operation aborted (0x80004004)." I haven't been able to figure out why the 'configuration was not accessible' but have confirmed that the disk WAS accessible. This is why replication is removed at the beginning of a group move or failover in the stop script.    
+  > Note: This problem only seemed to show up on the cluster with the Primary replication server (server1). Running the start script again (stop the script and start again from ECX Manager) would often fix the problem. But for some reason, calling the start script again from start.bat (if replication configuration failed) would usually not succeed.
