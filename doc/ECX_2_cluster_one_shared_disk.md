@@ -40,7 +40,7 @@ Configuring VM in 2 cluster one shared disk
 - 1 CPU
 - 8GB RAM
 - 2 NICs
-- 2 HDDs, 100 GB for OS and 10 GB for VM
+- 2 HDDs, 100 GB for OS and 50 GB for VM
 
 ## Setup procedure
 ### Create ECX Server & AD server
