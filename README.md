@@ -1,7 +1,7 @@
 # Cluster-Set
 The goal is to realize the value of WSFC's Cluster-Set with ECX.
 
-## Implementing Cluster-Set by EC (planning and investigation)
+## Implementing Cluster-Set by ECX (planning and investigation)
 
 ### Gary's premise 2022.08.02
 
@@ -17,7 +17,7 @@ The goal is to realize the value of WSFC's Cluster-Set with ECX.
 	- Stop the VM on a node in cluster-A
 	- Select option to reverse the direction of replication
 	- Select option to start the VM on a node in cluster-B
-- LM requirement : optional or mandatory
+- LM (Live Migration) requirement : optional or mandatory
 - WSFC requirement : optional or mandatory
 
 ### Yoshida's Ideas 2022.08.03
@@ -49,31 +49,31 @@ The goal is to realize the value of WSFC's Cluster-Set with ECX.
 	- VMs must be stopped first since live migration is not possible.
 - VMs can be live-migrated to another node within the same cluster from Failover Cluster Manager (also confirmed in testing)
 
-## Implementing Cluster-Set by EC (application)
+## Implementing Cluster-Set by ECX (application)
 
 ### 1. ECX 2-cluster one shared disk
 
 ### ECX 2 cluster note 2022.09.28 
-*Reproduce the same configuration as Cluster-Set only with ECX*
+*Reproduce the same configuration as Cluster-Set, only with ECX*
 
 **Testing Configuration**
 - Two clusters of 2 nodes each were created.
 - They connect to the same iSCSI and check the contents of the disk.
 - Set start script and end script to control VM.
-- I stop the disk resource from one of the cluster, to prevent seeing on the same disc at the same time.
+- I stop the disk resource from one of the clusters to prevent seeing the same disc at the same time.
 - I use RestfulAPI in my custom monitor resource script to check if other clusters are running 
-- It is difficult to FO to other cluster with only script resource.
-	- There is a risk that the script will not run when the server turned off at the same time by using the script resource.
-	- It is not possible to determine when to move manually and when not to move during maintenance etc.
+- It is difficult to FO to another cluster with only a script resource.
+	- There is a risk that the script will not run when the server is turned off at the same time.
+	- It is not possible to determine when to move manually and when not to move during maintenance, etc.
 
 **VM Migration**
-- VMs can be moved across clusters using the script resource and Stopping the disk resource by manual.
+- VMs can be moved across clusters using the script resource and Stopping the disk resource manually.
 
 ### ECX 2 cluster script outline
 - This script can be started on any server
 - The information of cluster1, cluster2, server1, server2, server3, server4 as variables
-- specify as an array
-- subsequent processing
+- Specify as an array
+- Subsequent processing
 - Get the status of the cluster to which the server belongs, change the URL later
 
 ```
@@ -95,6 +95,8 @@ if ($result.groups.status -eq "Online")
     exit 0
 ```
  Start group with RESTful API or clprexec
+
+Link to more [specific details](doc/ECX_2_cluster_one_shared_disk.md).
 
 ### 2. ECX 2 cluster two shared disks with Hyper-V Replication
 
@@ -124,4 +126,3 @@ If you only want to temporarily move a VM to another cluster (while performing m
 ```
 Move-VM -Name <vm name> -DestinationHost <active node in other cluster> -IncludeStorage -DestinationStoragePath <location for files>
 ```
-
